@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 
-#instantiate Flask functionality
+# instantiate Flask functionality
 app = Flask(__name__)
 
 # set sqlalchemy URI in application config
@@ -9,7 +9,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-db = SQLAlchemy(app)# instance of SQL 
+db = SQLAlchemy(app)  # instance of SQL
 
 
 class TodoList(db.Model):
@@ -17,47 +17,54 @@ class TodoList(db.Model):
     todo = db.Column(db.Text, nullable=False)
 
     def __str__(self):
-      return f"{self.id} {self.todo}"
+        return f"{self.id} {self.todo}"
+
 
 def todo_serializer(todo):
     # convert data from TodoList to JSON
-  return{
-    "id":todo.id,
-    "todo":todo.todo
-  }
+    return {"id": todo.id, "todo": todo.todo}
 
-@app.route('/api', methods=['GET'])
+
+@app.route("/", methods=["GET"])
 def home():
-  return jsonify([*map(todo_serializer, TodoList.query.all())])
+    return jsonify([*map(todo_serializer, TodoList.query.all())])
 
-@app.route('/api/todo-create', methods=['POST'])
+
+@app.route("/todo-create", methods=["POST"])
 def todo_create():
     # add todo to database
-  request_data = json.loads(request.data)
-  todo = TodoList(todo=request_data['todo'])
+    request_data = json.loads(request.data)
+    todo = TodoList(todo=request_data["todo"])
 
-  db.session.add(todo)
-  db.session.commit()
+    db.session.add(todo)
+    db.session.commit()
+    # print(TodoList.query.all())
 
-  return{'201':'todo created successfully'}
+    return {"201": "todo created successfully"}
 
-@app.route('/api/<int:id>', methods=['PUT'])
+
+@app.route("/update/<int:id>", methods=["PUT"])
 def update_todo(id):
-    #edit todo iem based on ID
-  todo = TodoList.query.get(id)
-  todo = request.json['todo']
-  todo.todo = todo
-  db.session.commit()
+    # edit todo item based on ID
+    item = TodoList.query.get(id)
+    request.get_json(force=True)
+    todo = request.json["todo"]
+    item.todo = todo
+    db.session.commit()
 
-  return {"200":"Updated successfully"}
+    return {"200": "Updated successfully"}
 
-@app.route('/api/<int:id>', methods=['POST'])
+
+@app.route("/<int:id>", methods=["POST"])
 def delete_todo(id):
     # delete todo item from todo list
-  request_data = json.loads(request.data)
-  TodoList.query.filter_by(id=request_data['id']).delete()
-  db.session.commit()
-  return {"204":"Updated successfully"}
+    request.get_json(force=True)
+    request_data = json.loads(request.data)
 
-if __name__ == '__main__':
-  app.run(debug=True, host='0.0.0.0')
+    TodoList.query.filter_by(id=request_data["id"]).delete()
+    db.session.commit()
+    return {"204": "Delete successfully"}
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
