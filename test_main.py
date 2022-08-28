@@ -28,7 +28,7 @@ class RecipesApiTests(unittest.TestCase):
 
         db.session.commit()
 
-    def test_recipes_api_get_all_recipes(self):
+    def test_todo_list_endpoint(self):
 
         response = self.app.get("/")
         # print (response.data)
@@ -38,14 +38,14 @@ class RecipesApiTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_recipes_api_create_new_recipe(self):
+    def test_todo_creation_endpoint(self):
         json_data = {"todo": "Go to kschool"}
         response = self.app.post("/todo-create", data=json.dumps(json_data))
         # print(response.data)
 
         self.assertEqual(response.data, b'{"201":"todo created successfully"}\n')
 
-    def test_recipes_api_put_recipe_valid(self):
+    def test_update_todo_endpoint(self):
 
         json_data = {"todo": "just an update"}
         response = self.app.put(
