@@ -38,7 +38,6 @@ def todo_create():
 
     db.session.add(todo)
     db.session.commit()
-    # print(TodoList.query.all())
 
     return {"201": "todo created successfully"}
 
