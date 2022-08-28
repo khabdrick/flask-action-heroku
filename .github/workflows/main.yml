@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2  
       - uses: actions/setup-python@v2  
       - run: pip install -r requirements.txt  # install requirements to enable GitHub run our code
-      - run:  python3 test_main.py
+      - run:  python test_main.py
       
       - uses: actions/checkout@v2
 
