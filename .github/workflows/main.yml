@@ -2,14 +2,14 @@ name: CI/CD
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Activates the workflow then there is a push to the main or master branch
   push:
     branches: [main, master]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # allows you to manually execute this pipeline from the Actions tab.
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# A workflow run consists of one or more jobs that can be executed either sequentially or concurrently.
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -18,13 +18,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2  
       - uses: actions/setup-python@v2  
-      - run: pip install -r requirements.txt  # install requirements to enable GitHub run our code
+      - run: pip install -r requirements.txt  # install requirements to enable GitHub run tests
       - run:  python test_main.py
-      
-      - uses: actions/checkout@v2
 
       - uses: akhileshns/heroku-deploy@v3.12.12 #
         with:

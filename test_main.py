@@ -56,9 +56,6 @@ class RecipesApiTests(unittest.TestCase):
 
         self.assertEqual(response.data, b'{"200":"Updated successfully"}\n')
 
-    # executed after each test
-    def tearDown(self):
-        pass
 
 
 if __name__ == "__main__":
